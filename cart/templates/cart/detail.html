@@ -1,0 +1,65 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{# context: cart #}
+
+{% block title %}Your shopping cart{% endblock %}
+
+{% block content %}
+
+<h2 class="header">Your shopping cart</h2>
+{# shopping cart #}
+<div class="table-responsive">
+  <table class="table table-bordered cart">
+    <thead>
+      <tr class="success">
+        <th>Image</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Unit price</th>
+        <th>Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in cart %}
+      {% with product=item.product %}
+      <tr class="danger">
+        <td>
+          {# product link and image #}
+          <a href="{{ product.get_absolute_url }}">
+            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" class="img-thumbnail img-responsive">
+          </a>
+        </td>
+        {# product name, quantity, remove button, item price and total price #}
+        <td>{{ product.name }}</td>
+        <td>
+          <form action="{% url 'cart:cart_add' product.id %}" method="post">
+            {% csrf_token %}
+            {{ item.update_quantity_form.quantity }}
+            {{ item.update_quantity_form.update }}
+            <input type="submit" value="Update" class="btn btn-success">
+            <a href="{% url 'cart:cart_remove' product.id %}" class="btn btn-danger">Remove</a>
+          </form>
+        </td>
+        <td class="num">${{ item.price }}</td>
+        <td class="num">${{ item.total_price }}</td>
+      </tr>
+      {% endwith %}
+    {% endfor %}
+    {# cart's total price #}
+    <tr class="success">
+      <td><h3>Total</h3></td>
+      <td colspan="3"></td>
+      <td class="num"><h4>${{ cart.get_total_price }}</h4></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<p class="text-right">
+  {# continue shopping (product list) #}
+  <a href="{% url 'shop:product_list' %}" class="btn btn-success">Continue shopping</a>
+  {# checkout #}
+  <a href="{% url 'orders:order_create' %}" class="btn btn-success">Checkout</a>
+</p>
+
+{% endblock %}

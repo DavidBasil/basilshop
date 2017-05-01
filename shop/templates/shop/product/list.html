@@ -1,0 +1,49 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{# context: category(if exists), categories, products #}
+
+
+{% block title %}
+  {% if category %}
+    {{ category.name }}
+  {% else %}
+  Products
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  {# sidebar for categories #}
+  <div class="col-md-3 sidebar">
+    <h4>Categories:</h4>
+    <div class="btn-group">
+      <button class="btn btn-success">
+        <a href="{% url 'shop:product_list' %}">All</a>
+      </button>
+      {% for c in categories %}
+      <button class="btn btn-success"}>
+        <a href="{{ c.get_absolute_url }}">{{ c.name|title }}</a>
+      </button>
+      {% endfor %}
+    </div><!-- /btn-group -->
+  </div><!-- /col -->
+
+  <div class="col-md-8 product-list">
+    {# product list #}
+    <h2>{% if category %}{{ category.name|title }}{% else %}All Products{% endif %}</h2>
+    {% for product in products %}
+    <div class="well">
+      <a href="{{ product.get_absolute_url }}">
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" class="img-thumbnail img-responsive">
+      </a>
+      <a href="{{ product.get_absolute_url }}" class="btn btn-success float-right">{{ product.name }}</a> 
+      <span class="btn btn-success disabled float-right">Price: ${{ product.price }}</span>
+    </div>
+    {% endfor %}
+
+  </div><!-- /col -->
+
+</div><!-- /row -->
+
+{% endblock %}

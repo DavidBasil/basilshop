@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+  <script type="text/javascript" src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- navbar -->
+  <nav class="navbar navbar-default navbar-fixed-top">
+
+    <div class="container-fluid">
+
+      <div class="navbar-header">
+        <a class="navbar-brand" href="{% url 'shop:product_list' %}">BasilShop</a>
+      </div>
+
+      <div class="nav navbar-nav navbar-right">
+        {% with total_items=cart|length %}
+          {% if cart|length > 0 %}
+          <a href="{% url 'cart:cart_detail' %}" class="cart"><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i> {{ total_items }} item{{ total_items|pluralize }}, ${{ cart.get_total_price }}</a>
+          {% else %}
+          <a href="{% url 'cart:cart_detail' %}">
+            <i class="fa fa-shopping-cart fa-2x" aria-hidden="true">
+              <span class="label label-success"> 0 </span>
+            </i>
+          </a>
+          {% endif %}
+        {% endwith %}
+      </div>
+
+    </div>
+
+  </nav><!-- /navbar -->
+
+  <!-- content -->  
+  <div class="content">
+
+    {% block content %}
+    {% endblock %}
+
+  </div><!-- /content -->
+
+  <!-- footer -->
+  <footer class="footer navbar-fixed-bottom">
+    <p>&copy; {% now 'Y' %} <a href="http://basildavid.com" target="blank">David Basil</a></p>
+  </footer><!-- /footer -->
+
+</div><!-- /container -->
+
+</body>
+</html>
